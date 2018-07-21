@@ -11,17 +11,17 @@ Barrels can be rotated with a screwdriver, left click to rotate around axis, rig
 Liquid barrels can only be oriented with opening on top (ran out of magic).
 There is a small mark on the opening to indicate orientation.
 
-Right-click:
-	With item or filled bucket in hand:
-		If barrel is empty or has same item/liquid, insert the entire stack or bucket in hand.
-	With empty hand:
-		Find all items/buckets in inventory of barrel type and insert them.
-Left-click:
-	If item barrel:
-		Get one item from barrel.
-		If sneaking, get up to one stack from barrel.
-	If Liquid barrel and empty bucket in hand:
-		Fill bucket from barrel.
+* Right-click:
+	* With item or filled bucket in hand:
+		* If barrel is empty or has same item/liquid, insert the entire stack or bucket in hand.
+	* With empty hand:
+		* Find all items/buckets in inventory of barrel type and insert them.
+* Left-click:
+	* If item barrel:
+		* Get one item from barrel.
+		* If sneaking, get up to one stack from barrel.
+	* If Liquid barrel and empty bucket in hand:
+		* Fill bucket from barrel.
 
 Barrels can't be broken while they contain items or liquid.
 Barrels are locked to an item/liquid, even when empty, and must be replaced to change type.
