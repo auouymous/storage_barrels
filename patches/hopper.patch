@@ -1,0 +1,36 @@
+diff --git a/utility.lua b/utility.lua
+index df30afb..0ec09db 100644
+--- a/utility.lua
++++ b/utility.lua
+@@ -85,6 +85,15 @@ hopper.take_item_from = function(hopper_pos, target_pos, target_node, target_inv
+ 	local hopper_inv = hopper_meta:get_inventory()
+ 	local placer = get_placer(hopper_meta:get_string("placer"))
+ 
++	-- source function
++	if type(target_inventory_name) == "function" then
++		local stack = target_inventory_name(target_pos, target_node, placer, hopper_inv, "main")
++		if not stack then return end
++		--add to hopper
++		hopper_inv:add_item("main", stack)
++		return
++	end
++
+ 	--source inventory
+ 	local target_inv = minetest.get_meta(target_pos):get_inventory()
+ 	local target_inv_size = target_inv:get_size(target_inventory_name)
+@@ -142,7 +151,14 @@ hopper.send_item_to = function(hopper_pos, target_pos, target_node, target_inven
+ 		local stack = hopper_inv:get_stack("main", i)
+ 		local item = stack:get_name()
+ 		if item ~= "" and (filtered_items == nil or filtered_items[item]) then
+-			if target_inventory_name then
++			if type(target_inventory_name) == "function" then
++				local stack_to_put = stack:take_item(1)
++				target_inventory_name(target_pos, target_node, placer, stack_to_put)
++				if stack_to_put:is_empty() then
++					hopper_inv:set_stack("main", i, stack)
++					return true
++				end
++			elseif target_inventory_name then
+ 				if target_inv:room_for_item(target_inventory_name, item) then
+ 					local stack_to_put = stack:take_item(1)
+ 					if target_def.allow_metadata_inventory_put == nil

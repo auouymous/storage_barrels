@@ -1,0 +1,20 @@
+- creative barrels can not be initialized with an item via API, because they don't consume the item
+
+"group:storage_item_barrel"
+"group:storage_liquid_barrel"
+
+minetest.registered_nodes[node.name].is_storage_item_barrel
+minetest.registered_nodes[node.name].is_storage_liquid_barrel
+minetest.registered_nodes[node.name].is_storage_locked_barrel
+
+storage_barrels.api.get_item_in_barrel(pos) -> string or ""
+storage_barrels.api.get_count_in_barrel(pos) -> int
+storage_barrels.api.get_max_count_for_barrel(node) -> int or -1 if creative
+
+storage_barrels.api.put_itemstack_in_barrel(pos, node, what, itemstack) -> itemstack
+	- result itemstack contains leftovers or is cleared
+
+storage_barrels.api.take_itemstack_from_barrel(pos, node, what, want_count) -> itemstack or nil
+	- result itemstack contains <= want_count or is nil
+storage_barrels.api.take_liquid_from_barrel(pos, node, what, want_count) -> itemstack or nil
+	- result itemstack contains <= want_count or is nil

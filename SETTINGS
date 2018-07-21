@@ -1,0 +1,33 @@
+storage_barrels_height = 0.95
+	- height should not be changed after barrels have been placed in the world, unless entities are disabled
+	- can be 0.25 to 1.0
+
+storage_barrels_disable_entities = false
+	- entities look nice, but they increase memory usage, lag server and reduce client FPS
+		- this is okay for single player but large servers should turn them off or increase cost of barrels
+	- if barrels have been placed in world:
+		- turning entities ON requires refreshing every barrel with the barrel mover
+		- turning entities OFF leaves behind unknown entities which can be punched to remove them
+	- issues:
+		- entities can be killed with /clearobjects - right-click with an empty barrel mover to recreate the entity
+		- entities can only be seen upto 48 nodes away, could be less on servers
+		- entities take time to appear when loading an area
+
+storage_barrels_disable_particles = false
+	- stream of particles when putting or taking items from barrels
+
+storage_barrels_disable_large_barrels = false
+storage_barrels_disable_liquid_barrels = false
+storage_barrels_disable_locked_barrels = false
+storage_barrels_disable_protected_barrels = false
+
+storage_barrels_disable_barrel_mover = false
+	- the barrel mover item allows full barrels to be picked up and moved elsewhere
+storage_barrels_barrel_mover_uses = 4
+	- default is 4 uses, set to 0 for infinite uses
+
+storage_barrels_max_count_small = 3000
+	- 3168 is 32 stacks of 99
+storage_barrels_max_count_large = 99999
+	- 101376 is 1024 stacks of 99
+storage_barrels_max_count_liquid = 100
