@@ -1,3 +1,6 @@
+storage_barrels_enable_hopper = false
+	- see hopper_support.lua
+
 storage_barrels_disable_api_logging = false
 	- machines putting/taking 1 item at a time produce a lot of log messages
 	- disabling api logging eliminates machine logging while still logging player puts/takes
