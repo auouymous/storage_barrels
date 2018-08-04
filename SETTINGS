@@ -1,3 +1,7 @@
+storage_barrels_disable_api_logging = false
+	- machines putting/taking 1 item at a time produce a lot of log messages
+	- disabling api logging eliminates machine logging while still logging player puts/takes
+
 storage_barrels_height = 0.95
 	- height should not be changed after barrels have been placed in the world, unless entities are disabled
 	- can be 0.25 to 1.0

@@ -1,5 +1,7 @@
 storage_barrels.api = {}
 
+local enable_logging = not minetest.settings:get_bool("storage_barrels_disable_api_logging")
+
 
 
 -- returns item in barrel
@@ -43,7 +45,7 @@ storage_barrels.api.put_itemstack_in_barrel = function(pos, node, what, itemstac
 	else
 		put_count = storage_barrels.put_itemstack_in_barrel(pos, node, itemstack, meta, item, count, max_count, nil)
 	end
-	if put_count > 0 then
+	if put_count > 0 and enable_logging then
 		minetest.log("action", what:get_player_name().." <put> "..put_count.." "..item.." in barrel at "..minetest.pos_to_string(pos))
 	end
 	return itemstack
@@ -76,7 +78,9 @@ storage_barrels.api.take_itemstack_from_barrel = function(pos, node, what, want_
 		meta:set_int("count", count)
 		storage_barrels.update_barrel_infotext(meta, item, count, max_count, nil)
 	end
-	minetest.log("action", what:get_player_name().." <take> "..take_count.." "..item.." from barrel at "..minetest.pos_to_string(pos))
+	if enable_logging then
+		minetest.log("action", what:get_player_name().." <take> "..take_count.." "..item.." from barrel at "..minetest.pos_to_string(pos))
+	end
 	itemstack:set_count(take_count)
 	return itemstack
 end
@@ -106,7 +110,9 @@ storage_barrels.api.take_liquid_from_barrel = function(pos, node, what, want_cou
 		meta:set_int("count", count)
 		storage_barrels.update_barrel_infotext(meta, item, count, max_count, nil)
 	end
-	minetest.log("action", what:get_player_name().." <take> "..take_count.." "..item.." from barrel at "..minetest.pos_to_string(pos))
+	if enable_logging then
+		minetest.log("action", what:get_player_name().." <take> "..take_count.." "..item.." from barrel at "..minetest.pos_to_string(pos))
+	end
 	itemstack:set_count(take_count)
 	return itemstack
 end
