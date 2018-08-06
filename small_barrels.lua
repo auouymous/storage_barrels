@@ -13,7 +13,7 @@ storage_barrels.base_ndef.max_count = max_count_small
 
 local ndef = table.copy(storage_barrels.base_ndef)
 ndef.description = "Item Barrel"
-storage_barrels.configure_item_barrel_ndef(ndef, top_texture)
+storage_barrels.configure_item_barrel_ndef(ndef, top_texture, true, true)
 minetest.register_node("storage_barrels:item", ndef)
 
 minetest.register_craft({
@@ -32,7 +32,7 @@ minetest.register_craft({
 if storage_barrels.enable_locked_barrels then
 	local ndef = table.copy(storage_barrels.base_ndef)
 	ndef.description = "Locked Item Barrel"
-	storage_barrels.configure_item_barrel_ndef(ndef, top_texture)
+	storage_barrels.configure_item_barrel_ndef(ndef, top_texture, true, false)
 	storage_barrels.configure_locked_barrel_ndef(ndef)
 	minetest.register_node("storage_barrels:item_locked", ndef)
 
@@ -60,7 +60,7 @@ end
 if storage_barrels.enable_protected_barrels then
 	local ndef = table.copy(storage_barrels.base_ndef)
 	ndef.description = "Protected Item Barrel"
-	storage_barrels.configure_item_barrel_ndef(ndef, top_texture)
+	storage_barrels.configure_item_barrel_ndef(ndef, top_texture, true, true)
 	storage_barrels.configure_protected_barrel_ndef(ndef)
 	minetest.register_node("storage_barrels:item_protected", ndef)
 

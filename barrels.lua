@@ -450,13 +450,85 @@ storage_barrels.base_ndef = {
 
 
 
-storage_barrels.configure_item_barrel_ndef = function(ndef, top)
+storage_barrels.configure_item_barrel_ndef = function(ndef, top, allow_put, allow_take)
 	ndef.tiles = {top,"storage_barrels_bottom_item.png","storage_barrels_side_item.png","storage_barrels_side_item.png","storage_barrels_side_item.png","storage_barrels_side_item.png"}
 	ndef.is_storage_item_barrel = true
+
+	if minetest.get_modpath("node_io") then
+		if allow_put then
+			ndef.node_io_can_put_item = function(pos, node, side) return true end
+			ndef.node_io_room_for_item = function(pos, node, side, itemstack)
+				local meta = minetest.get_meta(pos)
+				local item = meta:get_string("item")
+				if not meta or (item ~= "" and itemstack:get_name() ~= item) then return false end
+				return (meta:get_int("count") < minetest.registered_nodes[node.name].max_count)
+			end
+			ndef.node_io_put_item = function(pos, node, side, putter, itemstack)
+				local meta = minetest.get_meta(pos)
+				local item = meta:get_string("item")
+				if not meta or (item ~= "" and itemstack:get_name() ~= item) then return itemstack end
+				return storage_barrels.api.put_itemstack_in_barrel(pos, node, putter, itemstack)
+			end
+		end
+		if allow_take then
+			ndef.node_io_can_take_item = function(pos, node, side) return true end
+			ndef.node_io_get_item_size = function(pos, node, side)
+				return 1
+			end
+			ndef.node_io_get_item_name = function(pos, node, side, index)
+				local meta = minetest.get_meta(pos)
+				if not meta then return "" end -- no item
+				return meta:get_string("item")
+			end
+			ndef.node_io_take_item = function(pos, node, side, taker, want_item, want_count)
+				local meta = minetest.get_meta(pos)
+				if not meta then return nil end -- no item
+				local item = meta:get_string("item")
+				if item == "" or (want_item ~= nil and item ~= want_item) then return nil end -- no item
+				return storage_barrels.api.take_itemstack_from_barrel(pos, node, taker, want_count)
+			end
+		end
+	end
 end
-storage_barrels.configure_liquid_barrel_ndef = function(ndef, top)
+storage_barrels.configure_liquid_barrel_ndef = function(ndef, top, allow_put, allow_take)
 	ndef.tiles = {top,"storage_barrels_bottom_liquid.png","storage_barrels_side_liquid.png","storage_barrels_side_liquid.png","storage_barrels_side_liquid.png","storage_barrels_side_liquid.png"}
 	ndef.is_storage_liquid_barrel = true
+
+	if minetest.get_modpath("node_io") then
+		if allow_put then
+			ndef.node_io_can_put_liquid = function(pos, node, side) return true end
+			ndef.node_io_room_for_liquid = function(pos, node, side, itemstack)
+				local meta = minetest.get_meta(pos)
+				local liquid = meta:get_string("item")
+				if not meta or (liquid ~= "" and itemstack:get_name() ~= liquid) then return false end
+				return (meta:get_int("count") < minetest.registered_nodes[node.name].max_count)
+			end
+			ndef.node_io_put_liquid = function(pos, node, side, putter, itemstack)
+				local meta = minetest.get_meta(pos)
+				local liquid = meta:get_string("item")
+				if not meta or (liquid ~= "" and itemstack:get_name() ~= liquid) then return false end
+				return storage_barrels.api.put_itemstack_in_barrel(pos, node, putter, itemstack)
+			end
+		end
+		if allow_take then
+			ndef.node_io_can_take_liquid = function(pos, node, side) return true end
+			ndef.node_io_get_liquid_size = function(pos, node, side)
+				return 1
+			end
+			ndef.node_io_get_liquid_name = function(pos, node, side, index)
+				local meta = minetest.get_meta(pos)
+				if not meta then return "" end -- no liquid
+				return meta:get_string("item")
+			end
+			ndef.node_io_take_liquid = function(pos, node, side, taker, want_liquid, want_count)
+				local meta = minetest.get_meta(pos)
+				if not meta then return nil end -- no liquid
+				local liquid = meta:get_string("item")
+				if liquid == "" or (want_liquid ~= nil and liquid ~= want_liquid) then return nil end -- no liquid
+				return storage_barrels.api.take_itemstack_from_barrel(pos, node, taker, want_count)
+			end
+		end
+	end
 end
 
 storage_barrels.configure_locked_barrel_ndef = function(ndef)
