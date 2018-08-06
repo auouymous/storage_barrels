@@ -11,10 +11,13 @@ storage_barrels.api.get_item_in_barrel(pos) -> string or ""
 storage_barrels.api.get_count_in_barrel(pos) -> int
 storage_barrels.api.get_max_count_for_barrel(node) -> int or -1 if creative
 
-storage_barrels.api.put_itemstack_in_barrel(pos, node, what, itemstack) -> itemstack
+storage_barrels.api.put_itemstack_in_barrel(pos, node, putter, itemstack) -> itemstack
 	- result itemstack contains leftovers or is cleared
+	- putter is a fake player or nil
 
-storage_barrels.api.take_itemstack_from_barrel(pos, node, what, want_count) -> itemstack or nil
+storage_barrels.api.take_itemstack_from_barrel(pos, node, taker, want_count) -> itemstack or nil
 	- result itemstack contains <= want_count or is nil
-storage_barrels.api.take_liquid_from_barrel(pos, node, what, want_count) -> itemstack or nil
+	- taker is a fake player or nil
+storage_barrels.api.take_liquid_from_barrel(pos, node, taker, want_count) -> itemstack or nil
 	- result itemstack contains <= want_count or is nil
+	- taker is a fake player or nil
