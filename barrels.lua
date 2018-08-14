@@ -457,11 +457,13 @@ storage_barrels.configure_item_barrel_ndef = function(ndef, top, allow_put, allo
 	if minetest.get_modpath("node_io") then
 		if allow_put then
 			ndef.node_io_can_put_item = function(pos, node, side) return true end
-			ndef.node_io_room_for_item = function(pos, node, side, itemstack)
+			ndef.node_io_room_for_item = function(pos, node, side, itemstack, count)
 				local meta = minetest.get_meta(pos)
 				local item = meta:get_string("item")
-				if not meta or (item ~= "" and itemstack:get_name() ~= item) then return false end
-				return (meta:get_int("count") < minetest.registered_nodes[node.name].max_count)
+				if not meta or (item ~= "" and itemstack:get_name() ~= item) then return 0 end
+				local room = minetest.registered_nodes[node.name].max_count - meta:get_int("count")
+				if room >= count then return count end
+				return room
 			end
 			ndef.node_io_put_item = function(pos, node, side, putter, itemstack)
 				local meta = minetest.get_meta(pos)
@@ -497,17 +499,23 @@ storage_barrels.configure_liquid_barrel_ndef = function(ndef, top, allow_put, al
 	if minetest.get_modpath("node_io") then
 		if allow_put then
 			ndef.node_io_can_put_liquid = function(pos, node, side) return true end
-			ndef.node_io_room_for_liquid = function(pos, node, side, itemstack)
+			ndef.node_io_room_for_liquid = function(pos, node, side, liquid, millibuckets)
 				local meta = minetest.get_meta(pos)
-				local liquid = meta:get_string("item")
-				if not meta or (liquid ~= "" and itemstack:get_name() ~= liquid) then return false end
-				return (meta:get_int("count") < minetest.registered_nodes[node.name].max_count)
+				local item = meta:get_string("item")
+				if not meta or (item ~= "" and liquid ~= item) then return 0 end
+				local buckets = math.floor(millibuckets / 1000)
+				if buckets*1000 ~= millibuckets then return 0 end -- only accept full buckets
+				local room = (minetest.registered_nodes[node.name].max_count - meta:get_int("count"))*1000
+				if room >= millibuckets then return millibuckets end
+				return room
 			end
-			ndef.node_io_put_liquid = function(pos, node, side, putter, itemstack)
+			ndef.node_io_put_liquid = function(pos, node, side, putter, liquid, millibuckets)
 				local meta = minetest.get_meta(pos)
-				local liquid = meta:get_string("item")
-				if not meta or (liquid ~= "" and itemstack:get_name() ~= liquid) then return false end
-				return storage_barrels.api.put_itemstack_in_barrel(pos, node, putter, itemstack)
+				local item = meta:get_string("item")
+				if not meta or (item ~= "" and liquid ~= item) then return millibuckets end
+				local buckets = math.floor(millibuckets / 1000)
+				if buckets*1000 ~= millibuckets then return millibuckets end -- only accept full buckets
+				return storage_barrels.api.put_itemstack_in_barrel(pos, node, putter, ItemStack(liquid.." "..buckets))
 			end
 		end
 		if allow_take then
@@ -520,12 +528,15 @@ storage_barrels.configure_liquid_barrel_ndef = function(ndef, top, allow_put, al
 				if not meta then return "" end -- no liquid
 				return meta:get_string("item")
 			end
-			ndef.node_io_take_liquid = function(pos, node, side, taker, want_liquid, want_count)
+			ndef.node_io_take_liquid = function(pos, node, side, taker, want_liquid, want_millibuckets)
 				local meta = minetest.get_meta(pos)
 				if not meta then return nil end -- no liquid
 				local liquid = meta:get_string("item")
 				if liquid == "" or (want_liquid ~= nil and liquid ~= want_liquid) then return nil end -- no liquid
-				return storage_barrels.api.take_itemstack_from_barrel(pos, node, taker, want_count)
+				local want_buckets = math.floor(want_millibuckets / 1000)
+				local itemstack = storage_barrels.api.take_liquid_from_barrel(pos, node, taker, want_buckets)
+				if not itemstack then return nil end
+				return {name=itemstack:get_name(), millibuckets=itemstack:get_count()*1000}
 			end
 		end
 	end
