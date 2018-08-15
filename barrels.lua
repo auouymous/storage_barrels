@@ -482,12 +482,19 @@ storage_barrels.configure_item_barrel_ndef = function(ndef, top, allow_put, allo
 				if not meta then return "" end -- no item
 				return meta:get_string("item")
 			end
+			ndef.node_io_get_item_stack = function(pos, node, side, index)
+				local meta = minetest.get_meta(pos)
+				if not meta then return "" end -- no item
+				return ItemStack(meta:get_string("item").." 1")
+			end
 			ndef.node_io_take_item = function(pos, node, side, taker, want_item, want_count)
 				local meta = minetest.get_meta(pos)
 				if not meta then return nil end -- no item
 				local item = meta:get_string("item")
-				if item == "" or (want_item ~= nil and item ~= want_item) then return nil end -- no item
-				return storage_barrels.api.take_itemstack_from_barrel(pos, node, taker, want_count)
+				if item ~= "" and (want_item == nil or (type(want_item) == "userdata" and item == want_item:get_name()) or item == want_item) then
+					return storage_barrels.api.take_itemstack_from_barrel(pos, node, taker, want_count)
+				end
+				return nil -- no item
 			end
 		end
 	end
@@ -527,6 +534,11 @@ storage_barrels.configure_liquid_barrel_ndef = function(ndef, top, allow_put, al
 				local meta = minetest.get_meta(pos)
 				if not meta then return "" end -- no liquid
 				return meta:get_string("item")
+			end
+			ndef.node_io_get_liquid_stack = function(pos, node, side, index)
+				local meta = minetest.get_meta(pos)
+				if not meta then return "" end -- no liquid
+				return ItemStack(meta:get_string("item").." 1")
 			end
 			ndef.node_io_take_liquid = function(pos, node, side, taker, want_liquid, want_millibuckets)
 				local meta = minetest.get_meta(pos)
