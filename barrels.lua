@@ -522,7 +522,9 @@ storage_barrels.configure_liquid_barrel_ndef = function(ndef, top, allow_put, al
 				if not meta or (item ~= "" and liquid ~= item) then return millibuckets end
 				local buckets = math.floor(millibuckets / 1000)
 				if buckets*1000 ~= millibuckets then return millibuckets end -- only accept full buckets
-				return storage_barrels.api.put_itemstack_in_barrel(pos, node, putter, ItemStack(liquid.." "..buckets))
+				local leftovers = storage_barrels.api.put_itemstack_in_barrel(pos, node, putter, ItemStack(liquid.." "..buckets))
+				if leftovers:is_empty() then return 0 end
+				return leftovers:get_count()*1000
 			end
 		end
 		if allow_take then
