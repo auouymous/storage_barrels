@@ -46,6 +46,6 @@ Links
 Related Mods
 ==========
 
-* [Barrels](https://forum.minetest.net/viewtopic.php?id=6189)
+* [Barrels](https://forum.minetest.net/viewtopic.php?t=6189)
 * [Caches](https://forum.minetest.net/viewtopic.php?t=14425)
-* [Storage Drawers](https://forum.minetest.net/viewtopic.php?f=9&t=17134)
+* [Storage Drawers](https://forum.minetest.net/viewtopic.php?t=17134)
