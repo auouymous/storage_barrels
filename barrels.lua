@@ -447,7 +447,7 @@ storage_barrels.base_ndef = {
 	on_blast = barrel_on_blast,
 	on_destruct = storage_barrels.remove_barrel_entity
 }
-if minetest.get_modpath("node_io") then
+if storage_barrels.node_io then
 	storage_barrels.base_ndef.after_place_node = node_io.update_neighbors
 	storage_barrels.base_ndef.after_dig_node = node_io.update_neighbors
 end
@@ -458,7 +458,7 @@ storage_barrels.configure_item_barrel_ndef = function(ndef, top, allow_put, allo
 	ndef.tiles = {top,"storage_barrels_bottom_item.png","storage_barrels_side_item.png","storage_barrels_side_item.png","storage_barrels_side_item.png","storage_barrels_side_item.png"}
 	ndef.is_storage_item_barrel = true
 
-	if minetest.get_modpath("node_io") then
+	if storage_barrels.node_io then
 		if allow_put then
 			ndef.node_io_can_put_item = function(pos, node, side) return true end
 			ndef.node_io_room_for_item = function(pos, node, side, itemstack, count)
@@ -507,7 +507,7 @@ storage_barrels.configure_liquid_barrel_ndef = function(ndef, top, allow_put, al
 	ndef.tiles = {top,"storage_barrels_bottom_liquid.png","storage_barrels_side_liquid.png","storage_barrels_side_liquid.png","storage_barrels_side_liquid.png","storage_barrels_side_liquid.png"}
 	ndef.is_storage_liquid_barrel = true
 
-	if minetest.get_modpath("node_io") then
+	if storage_barrels.node_io then
 		if allow_put then
 			ndef.node_io_can_put_liquid = function(pos, node, side) return true end
 			ndef.node_io_room_for_liquid = function(pos, node, side, liquid, millibuckets)
@@ -583,7 +583,7 @@ storage_barrels.configure_locked_barrel_ndef = function(ndef)
 				storage_barrels.update_barrel_infotext(meta, "", 0, 0, owner)
 			end
 		end
-		if minetest.get_modpath("node_io") then node_io.update_neighbors(pos) end
+		if storage_barrels.node_io then node_io.update_neighbors(pos) end
 	end
 	ndef.on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
 		local meta = minetest.get_meta(pos)

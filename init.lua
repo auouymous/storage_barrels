@@ -1,6 +1,8 @@
 storage_barrels = {}
 local MP = minetest.get_modpath("storage_barrels").."/"
 
+storage_barrels.node_io = (minetest.get_modpath("node_io") ~= nil)
+
 
 
 -- settings
