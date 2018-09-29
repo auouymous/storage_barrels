@@ -460,8 +460,9 @@ storage_barrels.configure_item_barrel_ndef = function(ndef, top, allow_put, allo
 
 	if storage_barrels.node_io then
 		if allow_put then
-			ndef.node_io_can_put_item = function(pos, node, side) return true end
-			ndef.node_io_room_for_item = function(pos, node, side, itemstack, count)
+			ndef.node_io_can_put_item = function(pos, node, side, itemstack, count)
+				if not itemstack then return 1 end -- can put
+
 				local meta = minetest.get_meta(pos)
 				local item = meta:get_string("item")
 				if not meta or (item ~= "" and itemstack:get_name() ~= item) then return 0 end
@@ -509,8 +510,9 @@ storage_barrels.configure_liquid_barrel_ndef = function(ndef, top, allow_put, al
 
 	if storage_barrels.node_io then
 		if allow_put then
-			ndef.node_io_can_put_liquid = function(pos, node, side) return true end
-			ndef.node_io_room_for_liquid = function(pos, node, side, liquid, millibuckets)
+			ndef.node_io_can_put_liquid = function(pos, node, side, liquid, millibuckets)
+				if not liquid then return 1 end -- can put
+
 				local meta = minetest.get_meta(pos)
 				local item = meta:get_string("item")
 				if not meta or (item ~= "" and liquid ~= item) then return 0 end
